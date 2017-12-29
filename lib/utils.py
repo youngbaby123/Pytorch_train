@@ -2,12 +2,22 @@
 import torch
 import _init_paths
 from torch import nn, optim
-from net import my_net
+from net import my_net,my_tinynet,my_DenseNet
 
 
 def model(model_name):
     if model_name in ["mobilenet", 0]:
         return my_net.MobileNet()
+    elif model_name in ["Conv3fc2", 1]:
+        return my_net.Conv3fc2()
+    elif model_name in ["DwNet112_dw3_16", 2]:
+        return my_tinynet.DwNet112_dw3_16()
+    # elif model_name in ["DenseNet", 3]:
+    #     return my_DenseNet.DenseNet(growthRate=12, depth=18, reduction=0.5,
+    #                         bottleneck=True, nClasses=2)
+    elif model_name in ["Conv3fc1_nopool", 4]:
+        return my_tinynet.Conv3fc1_nopool()
+
 
 # 各优化方式的函数定义
 def opt_algorithm(finetune_params, learning_rate, alg_name):

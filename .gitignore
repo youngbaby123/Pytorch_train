@@ -2,3 +2,7 @@ data
 data/*
 result/*
 out/*
+*.pyc
+lib/*.pyc
+net/*.pyc
+tools/*.pyc

@@ -6,7 +6,7 @@ from torch.autograd import Variable
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 from torch import nn
-from net import my_net
+from net import my_net, my_tinynet
 import utils
 from data_load import myImageFloder
 import time
@@ -22,7 +22,9 @@ class test_net():
         self.img_size = opt.img_size
 
         # 模型导入, 模型选择
-        self.model = my_net.MobileNet()
+        # self.model = my_net.MobileNet()
+        # self.model = my_tinynet.Conv3fc2()
+        self.model = my_tinynet.DwNet112_dw3_16()
         self.model.load_state_dict(torch.load(opt.test_model))
         self.softmax_layer = nn.Softmax(dim=1)
         self.use_GPU = (torch.cuda.is_available() and opt.GPU)
@@ -107,7 +109,9 @@ class test_net():
         return pred_label.data.numpy(), pred_score.data.numpy(), true_label.data.numpy()
 
     def single_test_(self, img_path):
+        a = time.time()
         self.single_data_load(img_path=img_path)
+        b = time.time() - a
         if self.use_GPU:
             img = Variable(self.img, volatile=True).cuda()
         else:
@@ -118,4 +122,4 @@ class test_net():
         if self.use_GPU:
             pred = pred.cpu()
             score = score.cpu()
-        return pred.data.numpy(), score.data.numpy()
+        return pred.data.numpy(), score.data.numpy(), b

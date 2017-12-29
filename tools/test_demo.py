@@ -24,15 +24,16 @@ def Get_opt():
 
 def main():
     opt = Get_opt()
-    task_root = "/home/zkyang/Workspace/task/Pytorch_task/Pytorch_train/data/test_demo"
+    task_root = "/home/zkyang/Workspace/task/Pytorch_task/Pytorch_train/data/car"
 
-    opt.test_model = os.path.join(task_root, "mobilenet_car_ft_fc_1227_7.pth")
-    opt.data_root = "/home/zkyang/Workspace/task/Pytorch_task/Pytorch_train/data/car/Data"
+    opt.test_model = os.path.join(task_root, "car_DwNet112_dw3_16_1229_50.pth")
+    opt.data_root = "/home/zkyang/Workspace/task/Pytorch_task/Pytorch_train/data/car/Data_hand"
     opt.test_list_file = os.path.join(task_root, "test.txt")
     opt.label_list_file = os.path.join(task_root, "label.txt")
-    opt.GPU = True
-#    opt.GPU = False
+    # opt.GPU = True
+    opt.GPU = False
     opt.score_th = 0.8
+    opt.img_size = 112
 
     test = test_.test_net(opt)
     m = nn.LogSoftmax(dim=1)
@@ -44,23 +45,26 @@ def main():
 
     # single test
     first_time = time.time()
+    sum_a = 0
     for i, line in enumerate(img_list):
         # start_time = time.time()
         img_name, index = line.split()
         img_path = os.path.join(opt.data_root, img_name)
-        pred, score = test.single_test_(img_path)
+        pred, score, a = test.single_test_(img_path)
+        sum_a += a
         # print ("Single test time: {}".format(time.time()- start_time))
         # out_softmax = m(out)
         # print img_name, index
-        print pred, score
+        # print pred, score
         if pred == int(index):
             tp +=1
         else:
             fp+=1
-            print i
+            # print i
         # print "======================="*2
     print ("Single test time: {}".format((time.time()- first_time)/num))
     print 1.0*tp/(tp+fp)
+    print sum_a / (tp + fp)
 
     # # batch test
     # start_time = time.time()
