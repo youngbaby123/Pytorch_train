@@ -9,3 +9,6 @@ this_dir = osp.dirname(__file__)
 
 root_path = osp.join(this_dir, '..')
 add_path(root_path)
+
+lib_path = osp.join(this_dir, '../lib')
+add_path(lib_path)

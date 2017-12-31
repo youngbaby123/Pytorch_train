@@ -48,8 +48,8 @@ def testmyImageFloder():
 
     for index, (img, label) in enumerate(dataloader):
         # img.show()
-        print label
-    print dataloader.classes
+        print (label)
+    print (dataloader.classes)
 
 
 if __name__ == "__main__":
