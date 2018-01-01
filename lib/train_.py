@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import torch
+import sys
 import _init_paths
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
@@ -8,6 +9,7 @@ from torchvision import transforms
 import utils
 from data_load import myImageFloder
 import time
+from net import my_net,my_tinynet,my_DenseNet
 
 class train_net():
     def __init__(self,opt):
@@ -23,15 +25,22 @@ class train_net():
 
         # 模型导入, 模型选择
         # self.model = my_net.MobileNet()
-        self.model = utils.model(opt.model_name)
+        # self.model = utils.model(opt.model_name)
+        self.model = getattr(sys.modules["net.my_tinynet"], opt.model_name)()
 
         self.finetune_params = [k for k in list(self.model.parameters())]
         print ("IF fine tune: {}!".format(opt.finetune))
         if opt.finetune:
-            self.model.load_state_dict(torch.load(opt.finetune_model))
+            finetune_model = torch.load(opt.finetune_model)
+            # self.model.load_state_dict(torch.load(opt.finetune_model))
             fine_num = -opt.finetune_layer_num
             if opt.finetune_layer_num == -1:
                 fine_num = 0
+            model_dict = self.model.state_dict()
+            # print (fine_num)
+            for i,v in list(model_dict.items())[:fine_num]:
+                # print (i)
+                model_dict[i] = finetune_model[i]
             for para in list(self.model.parameters())[:fine_num]:
                 para.requires_grad = False
                 self.finetune_params.pop(0)

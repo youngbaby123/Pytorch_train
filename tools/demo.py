@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
+import _init_paths
 from lib import train_
 import logging
 import argparse
 from collections import OrderedDict
-import cPickle
+import pickle
+from net import my_tinynet
 
 def Get_opt():
     parse = argparse.ArgumentParser()
@@ -35,8 +37,29 @@ def Get_opt():
     parse.add_argument('--save_train_path', type=str, default="./result")
     return parse.parse_args()
 
-def Start_train_():
+
+def for_start():
     opt = Get_opt()
+    net_list = open("./net/netlist.txt", "r").readlines()
+    for list_i in net_list:
+        netname, img_size = list_i.split()
+        opt.model_name = netname
+        opt.img_size = int(img_size)
+        opt.save_model_name = "car_{}_1230".format(netname)
+        print (netname, opt.finetune)
+        if netname in ["MobileNet_dw8", "MobileNet_dw5", "MobileNet_dw3"]:
+            opt.finetune = True
+            opt.learning_rate = 1e-3
+        else:
+            opt.finetune = False
+            opt.learning_rate = 1e-2
+        print (opt.finetune)
+        Start_train_(opt)
+
+
+
+def Start_train_(opt):
+    # opt = Get_opt()
     res = OrderedDict()
     train_class = train_.train_net(opt)
     print ("==" * 36)
@@ -70,8 +93,8 @@ def Start_train_():
         res_save_path = opt.save_train_path
         if not os.path.exists(res_save_path):
             os.mkdir(res_save_path)
-        f1 = file('{}/{}_{}.pkl'.format(res_save_path, opt.save_model_name, name), 'wb')
-        cPickle.dump(res, f1)
+        f1 = open('{}/{}_{}.pkl'.format(res_save_path, opt.save_model_name, name), 'wb')
+        pickle.dump(res, f1)
 
 
 def main():
@@ -81,4 +104,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    for_start()
