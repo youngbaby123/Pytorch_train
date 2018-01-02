@@ -12,7 +12,8 @@ from data_load import myImageFloder
 import time
 from collections import OrderedDict
 from PIL import Image
-
+import sys
+import numpy as np
 
 
 class test_net():
@@ -24,8 +25,8 @@ class test_net():
         # 模型导入, 模型选择
         # self.model = my_net.MobileNet()
         # self.model = my_tinynet.Conv3fc2()
-        self.model = my_tinynet.DwNet112_dw3_16()
-        self.model.load_state_dict(torch.load(opt.test_model))
+        self.model = getattr(sys.modules["net.my_tinynet"], opt.model_name)()
+        self.model.load_state_dict(torch.load(opt.test_model, map_location=lambda storage, loc: storage))
         self.softmax_layer = nn.Softmax(dim=1)
         self.use_GPU = (torch.cuda.is_available() and opt.GPU)
 
@@ -74,20 +75,21 @@ class test_net():
         self.img = Image.open(img_path).convert('RGB')
         self.img = img_transform(self.img).unsqueeze(0)
 
-    # def Get_pred_label(self,out):
-    #     out_ = out.clone()
-    #     out_[out_<self.score_th] = 0.0
-    #     _, pred = torch.max(out_, 1)
-    #     return pred
+    def Get_pred_label(self,out):
+        out_ = out.clone()
+        # out_[out_<self.score_th] = 0.0
+        _, pred = torch.max(out_, 1)
+        pred[_ < self.score_th] = 0
+        return out[[range(len(pred)),pred]], pred
 
     def batch_test_(self):
         self.batch_data_load()
-        pred_label = Variable(torch.LongTensor(0, 1))
-        pred_score = Variable(torch.LongTensor(0, 1))
-        true_label = Variable(torch.LongTensor(0, 1))
-        if self.use_GPU:
-            pred_label = pred_label.cuda()
-            true_label = true_label.cuda()
+        # pred_label = Variable(torch.LongTensor(0, 1))
+        # pred_score = Variable(torch.FloatTensor(0, 1))
+        # true_label = Variable(torch.LongTensor(0, 1))
+        # if self.use_GPU:
+        #     pred_label = pred_label.cuda()
+        #     true_label = true_label.cuda()
         for i, data in enumerate(self.dataloader):
             img, label = data
             if self.use_GPU:
@@ -98,10 +100,16 @@ class test_net():
                 label = Variable(label, volatile=True)
             out = self.model(img)
             out = self.softmax_layer(out)
-            score, pred = torch.max(out, 1)
-            pred_score = torch.cat((score, pred, score), 0)
-            pred_label = torch.cat((pred_label, pred), 0)
-            true_label = torch.cat((true_label, label), 0)
+            # score, pred = torch.max(out, 1)
+            score, pred = self.Get_pred_label(out)
+            if i == 0:
+                pred_score = score
+                pred_label = pred
+                true_label = label
+            else:
+                pred_score = torch.cat((pred_score, score),0)
+                pred_label = torch.cat((pred_label, pred),0)
+                true_label = torch.cat((true_label, label), 0)
         if self.use_GPU:
             pred_score = pred_score.cpu()
             pred_label = pred_label.cpu()
