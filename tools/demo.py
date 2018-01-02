@@ -40,19 +40,24 @@ def Get_opt():
 
 def for_start():
     opt = Get_opt()
-    net_list = open("./net/netlist.txt", "r").readlines()
+    net_list = open("./net/netlistbak_2.txt", "r").readlines()
     for list_i in net_list:
         netname, img_size = list_i.split()
+        if_trainbatch = netname.split("_")[-1]
         opt.model_name = netname
         opt.img_size = int(img_size)
         opt.save_model_name = "car_{}_1230".format(netname)
         print (netname, opt.finetune)
         if netname in ["MobileNet_dw8", "MobileNet_dw5", "MobileNet_dw3"]:
             opt.finetune = True
-            opt.learning_rate = 1e-3
+            opt.learning_rate = 1e-2
         else:
             opt.finetune = False
             opt.learning_rate = 1e-2
+        if if_trainbatch =="64":
+            opt.train_batch_size = 32
+        else:
+            opt.train_batch_size = 64
         print (opt.finetune)
         Start_train_(opt)
 
