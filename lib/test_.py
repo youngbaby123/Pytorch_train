@@ -117,17 +117,17 @@ class test_net():
         return pred_label.data.numpy(), pred_score.data.numpy(), true_label.data.numpy()
 
     def single_test_(self, img_path):
-        a = time.time()
+        load_time_start = time.time()
         self.single_data_load(img_path=img_path)
-        b = time.time() - a
+        load_time = time.time() - load_time_start
         if self.use_GPU:
             img = Variable(self.img, volatile=True).cuda()
         else:
             img = Variable(self.img, volatile=True)
         out = self.model(img)
         out = self.softmax_layer(out)
-        score, pred = torch.max(out, 1)
+        score, pred = self.Get_pred_label(out)
         if self.use_GPU:
             pred = pred.cpu()
             score = score.cpu()
-        return pred.data.numpy(), score.data.numpy(), b
+        return pred.data.numpy(), score.data.numpy(), load_time

@@ -21,7 +21,7 @@ def Get_opt():
     parse.add_argument('--test_list_file', default="./test.txt")
     parse.add_argument('--label_list_file', default="./label.txt")
     parse.add_argument('--GPU', type=bool, default=False)
-    parse.add_argument('--score_th', type=float, default=0.8)
+    parse.add_argument('--score_th', type=float, default=0.0)
     return parse.parse_args()
 
 def main():
@@ -86,10 +86,21 @@ def test_summary():
     pred = np.load("./test_summary_0.4_pred.npy")
     true = np.load("./test_summary_0.4_true.npy")
     score = np.load("./test_summary_0.4_score.npy")
-    summary = summary_.result_summary(pred, true)
+    label = [1, 0]
+    score_th = None
+    summary = summary_.result_summary(pred, true, score,labels=label, score_th = score_th)
+
     print (len(pred))
     print (summary.Get_Confusion_matrix())
-
+    # print (summary.diag())
+    # print (summary.Get_labels())
+    print ("TP:", summary.Get_TP())
+    print ("FP:", summary.Get_FP())
+    print ("FN:", summary.Get_FN())
+    print ("ACC:", summary.Get_Accuracy())
+    print ("Precision:", summary.Get_Precision())
+    print ("Recall:", summary.Get_Recall())
+    print ("AP:", summary.Get_AP())
 
 if __name__ == '__main__':
     # main()
