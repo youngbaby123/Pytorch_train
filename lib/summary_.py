@@ -64,7 +64,7 @@ class result_summary():
 
     def Get_Recall(self):
         tp_list = np.diag(self.confusion_mat)
-        recall_list = tp_list/np.sum(self.confusion_mat, 1)
+        recall_list = 1.0*tp_list/np.sum(self.confusion_mat, 1)
         recall_dict = {}
         for index_i, label_i in enumerate(self.labels):
             recall_dict[label_i] = recall_list[index_i]
@@ -74,7 +74,7 @@ class result_summary():
         # precision_list = precision_score(self.true, self.pred, labels=self.labels, average=None)
 
         tp_list = np.diag(self.confusion_mat)
-        precision_list = tp_list/np.sum(self.confusion_mat, 0)
+        precision_list = 1.0*tp_list/np.sum(self.confusion_mat, 0)
         precision_dict = {}
         for index_i, label_i in enumerate(self.labels):
             precision_dict[label_i] = precision_list[index_i]

@@ -79,7 +79,9 @@ class test_net():
         out_ = out.clone()
         # out_[out_<self.score_th] = 0.0
         _, pred = torch.max(out_, 1)
-        pred[_ < self.score_th] = 0
+        index = _ < self.score_th
+        if torch.sum(index) != 0:
+            pred[index] = 0
         return out[[range(len(pred)),pred]], pred
 
     def batch_test_(self):
