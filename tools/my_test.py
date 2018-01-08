@@ -17,11 +17,11 @@ def main():
     img_root = "/home/zkyang/Workspace/task/Pytorch_task/Pytorch_train/data/car/Data"
     img_list, rel_img_list = load_file(img_root, rel_path = "", img_list=[], rel_img_list = [])
     for i in img_list:
-        print i
+        print (i)
         # new_name = ''.join(i.split(" "))
         # os.rename(i,new_name)
         filepath = os.path.dirname(i)
-        print filepath
+        print (filepath)
 
 
 
