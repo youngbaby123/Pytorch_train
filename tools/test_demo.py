@@ -139,7 +139,7 @@ def all_summary():
 
     summary_label = ["model_name", "label", "tp", "fp", "fn", "precision", "recall", "AP", "accuracy", "test_speed",
                      "load_speed", "params_num", "file_size"]
-    save_file_path = os.path.join(task_root, "bg_summary_GPU_0108.txt")
+    save_file_path = os.path.join(task_root, "sm_summary_GPU_0108.txt")
     save_file = open(save_file_path, "w+")
     save_file.write("\t".join(summary_label)+"\n")
     save_file.close()
