@@ -1,7 +1,0 @@
-Conv3fc2_max_64 112
-Conv3fc2_nopool_16 112
-Conv3fc2_nopool_32 112
-Conv3fc2_nopool_64 112
-Conv3fc2_nopool_avg_16 112
-Conv3fc2_nopool_avg_32 112
-Conv3fc2_nopool_avg_64 112

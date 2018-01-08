@@ -38,7 +38,7 @@ class train_net():
                 fine_num = 0
             model_dict = self.model.state_dict()
             # print (fine_num)
-            for i,v in list(model_dict.items())[:fine_num]:
+            for i,v in list(model_dict.items())[:-2]:
                 # print (i)
                 model_dict[i] = finetune_model[i]
             for para in list(self.model.parameters())[:fine_num]:

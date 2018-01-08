@@ -40,7 +40,7 @@ def Get_opt():
 
 def for_start():
     opt = Get_opt()
-    net_list = open("./net/netlistbak_2.txt", "r").readlines()
+    net_list = open("./net/netlist.txt", "r").readlines()
     for list_i in net_list:
         netname, img_size = list_i.split()
         if_trainbatch = netname.split("_")[-1]
@@ -103,11 +103,10 @@ def Start_train_(opt):
 
 
 def main():
-    # opt = Get_opt()
-    # test_demo(opt)
-    Start_train_()
+    opt = Get_opt()
+    Start_train_(opt)
 
 
 if __name__ == '__main__':
-    # main()
-    for_start()
+    main()
+    # for_start()
