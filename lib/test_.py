@@ -133,3 +133,13 @@ class test_net():
             pred = pred.cpu()
             score = score.cpu()
         return pred.data.numpy(), score.data.numpy(), load_time
+
+    def summary_params(self):
+        params = self.model.state_dict()
+        sum_p = 0
+        for k,v in params.items():
+            p_i = 1
+            for i in range(v.dim()):
+                p_i *= v.size()[i]
+            sum_p += p_i
+        return sum_p

@@ -18,8 +18,10 @@ def main():
     img_list, rel_img_list = load_file(img_root, rel_path = "", img_list=[], rel_img_list = [])
     for i in img_list:
         print i
-        new_name = ''.join(i.split(" "))
-        os.rename(i,new_name)
+        # new_name = ''.join(i.split(" "))
+        # os.rename(i,new_name)
+        filepath = os.path.dirname(i)
+        print filepath
 
 
 

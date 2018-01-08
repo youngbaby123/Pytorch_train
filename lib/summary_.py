@@ -60,11 +60,11 @@ class result_summary():
     def Get_Accuracy(self):
         All_num = np.sum(self.confusion_mat)
         Ture_num = np.sum(np.diag(self.confusion_mat))
-        return 1.0*Ture_num/All_num
+        return 1.0*Ture_num/np.maximum(All_num, np.finfo(np.float64).eps)
 
     def Get_Recall(self):
         tp_list = np.diag(self.confusion_mat)
-        recall_list = 1.0*tp_list/np.sum(self.confusion_mat, 1)
+        recall_list = 1.0*tp_list/np.maximum(np.sum(self.confusion_mat, 1), np.finfo(np.float64).eps)
         recall_dict = {}
         for index_i, label_i in enumerate(self.labels):
             recall_dict[label_i] = recall_list[index_i]
@@ -74,7 +74,7 @@ class result_summary():
         # precision_list = precision_score(self.true, self.pred, labels=self.labels, average=None)
 
         tp_list = np.diag(self.confusion_mat)
-        precision_list = 1.0*tp_list/np.sum(self.confusion_mat, 0)
+        precision_list = 1.0*tp_list/np.maximum(np.sum(self.confusion_mat, 0), np.finfo(np.float64).eps)
         precision_dict = {}
         for index_i, label_i in enumerate(self.labels):
             precision_dict[label_i] = precision_list[index_i]
@@ -87,9 +87,9 @@ class result_summary():
         sorted_ind = np.argsort(-self.score)
         sort_pred = self.pred[sorted_ind]
         sort_true = self.true[sorted_ind]
+        for label_i in self.labels:
+            pred_dict[label_i] = []
         for index_i, pred_i in enumerate(sort_pred):
-            if not pred_i in pred_dict:
-                pred_dict[pred_i] = []
             if pred_i == sort_true[index_i]:
                 pred_dict[pred_i].append(1.0)
             else:
