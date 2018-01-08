@@ -7,8 +7,8 @@ from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 from torch import nn
 from net import my_net, my_tinynet
-import utils
-from data_load import myImageFloder
+from lib import utils
+from lib.data_load import myImageFloder
 import time
 from collections import OrderedDict
 from PIL import Image
@@ -80,8 +80,11 @@ class test_net():
         # out_[out_<self.score_th] = 0.0
         _, pred = torch.max(out_, 1)
         index = _ < self.score_th
-        if torch.sum(index) != 0:
+        if sys.version_info > (3, ):
             pred[index] = 0
+        else:
+            if torch.sum(index) != 0:
+                pred[index] = 0
         return out[[range(len(pred)),pred]], pred
 
     def batch_test_(self):

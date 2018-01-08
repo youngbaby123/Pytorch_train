@@ -126,16 +126,17 @@ def save_res(res, model_name, save_path):
 
 def all_summary():
     opt = Get_opt()
-    task_root = "/home/zkyang/Workspace/task/Pytorch_task/Pytorch_train"
-    opt.data_root = os.path.join(task_root, "data/car/Data_more")
-    opt.test_list_file = os.path.join(task_root, "data/car/bg_list.txt")
+    this_dir = os.path.dirname(__file__)
+    task_root = os.path.join(this_dir, "..")
+    opt.data_root = os.path.join(task_root, "data/car/Data_hand")
+    opt.test_list_file = os.path.join(task_root, "data/car/test.txt")
     opt.label_list_file = os.path.join(task_root, "data/car/label.txt")
     # opt.GPU = True
     opt.GPU = False
 
     img_list = open(opt.test_list_file).readlines()
 
-    model_list_file = open(os.path.join(task_root, "net/netlist_tiny.txt"), "r").readlines()
+    model_list_file = open(os.path.join(task_root, "net/netlist.txt"), "r").readlines()
 
     summary_label = ["model_name", "label", "tp", "fp", "fn", "precision", "recall", "AP", "accuracy", "test_speed",
                      "load_speed", "params_num", "file_size"]
@@ -189,7 +190,7 @@ def all_summary():
         res[opt.model_name]["recall"] = summary.Get_Recall()
         res[opt.model_name]["accuracy"] = summary.Get_Accuracy()
         res[opt.model_name]["AP"] = summary.Get_AP()
-        print res[opt.model_name]
+        print (res[opt.model_name])
 
         save_res(res[opt.model_name], opt.model_name, save_file_path)
 
@@ -238,7 +239,7 @@ def params_test():
     print (1.0*test.summary_params()*4/1024)
 
 def get_FileSize(filePath):
-    filePath = unicode(filePath,'utf8')
+    # filePath = unicode(filePath,'utf8')
     fsize = os.path.getsize(filePath)
     fsize = fsize/float(1024)
 
