@@ -2,7 +2,7 @@
 import torch
 import _init_paths
 from torch import nn, optim
-from net import my_net,my_tinynet,my_DenseNet
+from net import my_net,my_tinynet
 
 
 def model(model_name):

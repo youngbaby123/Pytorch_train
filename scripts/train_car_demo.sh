@@ -9,13 +9,13 @@ python ./tools/train_demo.py \
 	--model_name Conv2fc1_avg_16 \
 	--loss_name CrossEntropyLoss \
 	--alg_name SGD \
-	--data_root ./data/car/Data_hand \
-	--train_list_file ./data/car/train.txt \
-	--val_list_file ./data/car/val.txt \
-	--label_list_file ./data/car/label.txt \
+	--data_root ./data/train_demo/Data \
+	--train_list_file ./data/train_demo/train.txt \
+	--val_list_file ./data/train_demo/val.txt \
+	--label_list_file ./data/train_demo/label.txt \
 	--save_model_step 8 \
 	--save_model_path ./out \
-	--save_model_name car_Conv3fc2_1229 \
+	--save_model_name Conv2fc1_avg_16_1230 \
 	--save_train_loss 1 \
 	--save_train_path ./result
 #	--finetune_model ./net/mobilenet.pth \

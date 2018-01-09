@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import _init_paths
 from lib import test_
 import logging
 import argparse
@@ -8,7 +9,6 @@ import torch
 from torch import nn
 import numpy as np
 import time
-import _init_paths
 from lib import summary_
 
 def Get_opt():
@@ -56,9 +56,9 @@ def all_summary():
     opt = Get_opt()
     this_dir = os.path.dirname(__file__)
     task_root = os.path.join(this_dir, "..")
-    opt.data_root = os.path.join(task_root, "data/car/Data_more")
-    opt.test_list_file = os.path.join(task_root, "data/car/sm_list.txt")
-    opt.label_list_file = os.path.join(task_root, "data/car/label.txt")
+    opt.data_root = os.path.join(task_root, "data/train_demo/Data")
+    opt.test_list_file = os.path.join(task_root, "data/train_demo/test.txt")
+    opt.label_list_file = os.path.join(task_root, "data/train_demo/label.txt")
     # opt.GPU = True
     opt.GPU = False
 
@@ -68,7 +68,7 @@ def all_summary():
 
     summary_label = ["model_name", "label", "tp", "fp", "fn", "precision", "recall", "AP", "accuracy", "test_speed",
                      "load_speed", "params_num", "file_size"]
-    save_file_path = os.path.join(task_root, "bg_summary_GPU_0109.txt")
+    save_file_path = os.path.join(task_root, "data/train_demo/summary_CPU.txt")
     save_file = open(save_file_path, "w+")
     save_file.write("\t".join(summary_label)+"\n")
     save_file.close()
@@ -77,16 +77,18 @@ def all_summary():
 
     for model_i in model_list_file:
         opt.model_name, img_size = model_i.split()
-        opt.test_model = os.path.join(task_root, "out/out_40/car_{}_1230_40.pth".format(opt.model_name))
+        opt.test_model = os.path.join(task_root, "out/car_{}_1230_40.pth".format(opt.model_name))
         opt.img_size = int(img_size)
         # opt.score_th = 0.8
+        # 是否启动GPU
         opt.GPU = False
         test = test_.test_net(opt)
         res[opt.model_name] = {}
 
+        #模型的参数个数统计以及模型存储大小
         res[opt.model_name]["params_num"] = test.summary_params()
         res[opt.model_name]["file_size"] = get_FileSize(opt.test_model)
-        # time test 时间测试, 从第11张到第110张的平均测试时间,平均数据导入时间
+        # time test 时间测试, 从第101张到第1100张的平均测试时间,平均数据导入时间
         sum_load_time = 0
         for i, line in enumerate(img_list[:1100]):
             if i == 100:

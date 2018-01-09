@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
+import _init_paths
 from lib import test_
 import logging
 import argparse
 from collections import OrderedDict
 import numpy as np
 import time
-import _init_paths
 from lib import summary_
 
 def Get_opt():
@@ -28,18 +28,19 @@ def single_test():
     this_dir = os.path.dirname(__file__)
     task_root = os.path.join(this_dir, "..")
     # 检测图像根目录
-    opt.data_root = os.path.join(task_root, "data/car/Data_more")
+    opt.data_root = os.path.join(task_root, "data/train_demo/Data")
     # 检测图像列表
-    opt.test_list_file = os.path.join(task_root, "data/car/sm_list.txt")
+    opt.test_list_file = os.path.join(task_root, "data/train_demo/test.txt")
     img_list = open(opt.test_list_file).readlines()
     # 类别及其对应编号列表
-    opt.label_list_file = os.path.join(task_root, "data/car/label.txt")
+    opt.label_list_file = os.path.join(task_root, "data/train_demo/label.txt")
     # GPU切换
     # opt.GPU = True
     opt.GPU = False
 
-    opt.model_name = "DwNet112_dw3_avg_16"
-    opt.test_model = os.path.join(task_root, "out/out_40/car_{}_1230_40.pth".format(opt.model_name))
+    # 使用的模型导入
+    opt.model_name = "Conv2fc1_avg_16"
+    opt.test_model = os.path.join(task_root, "out/car_{}_1230_40.pth".format(opt.model_name))
     opt.img_size = 112
 
     # 导入模型，并初始化

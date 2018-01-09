@@ -9,7 +9,7 @@ from torchvision import transforms
 import utils
 from data_load import myImageFloder
 import time
-from net import my_net,my_tinynet,my_DenseNet
+from net import my_net,my_tinynet
 
 class train_net():
     def __init__(self,opt):
